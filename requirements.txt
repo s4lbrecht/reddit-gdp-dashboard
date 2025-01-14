@@ -1,2 +1,8 @@
 streamlit
+praw
 pandas
+thefuzz[speedup]
+wbdata
+matplotlib
+seaborn
+country_converter
