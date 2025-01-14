@@ -15,8 +15,6 @@ st.set_page_config(page_title="Reddit Migration Analysis", layout="wide")
 
 # Sidebar Inputs
 st.sidebar.header("Reddit API Credentials")
-
-# Input fields for Reddit API credentials
 client_id = st.sidebar.text_input("Client ID", type="password")
 client_secret = st.sidebar.text_input("Client Secret", type="password")
 user_agent = st.sidebar.text_input("User Agent", value="Reddit Migration Analysis App")
@@ -35,7 +33,7 @@ remove_gdp_outliers = st.sidebar.checkbox("Remove Outliers in GDP per Capita", v
 remove_occurrence_outliers = st.sidebar.checkbox("Remove Outliers in Occurrences", value=False)
 
 # Fetch Reddit Posts
-@st.cache_data(ttl=3600, suppress_st_warning=True)
+@st.cache_data(ttl=3600)
 def fetch_reddit_posts(client_id, client_secret, user_agent, subreddit_name, limit):
     try:
         reddit = praw.Reddit(
@@ -61,6 +59,7 @@ if client_id and client_secret and user_agent:
         st.write(f"Total posts fetched: {len(posts)}")
     else:
         st.warning("No posts fetched. Please check your credentials and try again.")
+        st.stop()
 else:
     st.warning("Please enter your Reddit API credentials in the sidebar to proceed.")
     st.stop()
@@ -134,7 +133,7 @@ standardized_countries = [standardize_country(c) for c in all_countries]
 standardized_countries = [c for c in standardized_countries if isinstance(c, str)]
 
 # Fetch GDP Data
-@st.cache_data(ttl=86400, suppress_st_warning=True)
+@st.cache_data(ttl=86400)
 def fetch_gdp_data(indicator):
     try:
         gdp_data = wbdata.get_dataframe(
